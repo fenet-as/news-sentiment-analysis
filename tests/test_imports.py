@@ -27,3 +27,7 @@ def test_import_utils():
 
 def test_import_eda():
     import src.eda  # noqa: F401
+
+
+def test_import_correlation():
+    import src.correlation  # noqa: F401
