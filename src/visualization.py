@@ -91,6 +91,45 @@ def sentiment_vs_returns(
     return fig
 
 
+def bar_chart(
+    data: pd.DataFrame,
+    x: str,
+    y: str,
+    title: str = "Bar Chart",
+    xlabel: str = "",
+    ylabel: str = "Count",
+    figsize: tuple = (10, 5),
+    top_n: Optional[int] = None,
+    palette: str = "muted",
+) -> plt.Figure:
+    """Horizontal bar chart — useful for top‑K frequencies."""
+    if top_n is not None:
+        data = data.head(top_n)
+
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.barplot(data=data, x=y, y=x, palette=palette, ax=ax)
+    ax.set(title=title, xlabel=ylabel, ylabel=xlabel)
+    sns.despine()
+    return fig
+
+
+def histogram(
+    series: pd.Series,
+    title: str = "Distribution",
+    xlabel: str = "Value",
+    figsize: tuple = (8, 4),
+    bins: int = 50,
+    kde: bool = True,
+    color: str = "steelblue",
+) -> plt.Figure:
+    """Histogram with optional KDE overlay."""
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.histplot(series, bins=bins, kde=kde, color=color, ax=ax)
+    ax.set(title=title, xlabel=xlabel, ylabel="Frequency")
+    sns.despine()
+    return fig
+
+
 def correlation_heatmap(
     df: pd.DataFrame,
     title: str = "Correlation Matrix",
