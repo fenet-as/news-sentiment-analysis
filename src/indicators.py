@@ -9,7 +9,6 @@ from typing import Optional
 import numpy as np
 import pandas as pd
 
-
 from src.utils import setup_logger
 
 logger = setup_logger(__name__)
