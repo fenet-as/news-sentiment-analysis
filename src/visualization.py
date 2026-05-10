@@ -166,6 +166,29 @@ def price_volume(
     return fig
 
 
+def scatter(
+    df: pd.DataFrame,
+    x: str,
+    y: str,
+    title: str = "Scatter Plot",
+    xlabel: str = "",
+    ylabel: str = "",
+    hue: Optional[str] = None,
+    figsize: tuple = (8, 6),
+    fit_reg: bool = True,
+) -> plt.Figure:
+    """Scatter plot with optional regression line and hue grouping."""
+    fig, ax = plt.subplots(figsize=figsize)
+    sns.regplot(
+        data=df, x=x, y=y, scatter_kws={"alpha": 0.5, "s": 20},
+        line_kws={"color": "red", "linewidth": 1},
+        fit_reg=fit_reg, ax=ax,
+    )
+    ax.set(title=title, xlabel=xlabel, ylabel=ylabel)
+    sns.despine()
+    return fig
+
+
 def correlation_heatmap(
     df: pd.DataFrame,
     title: str = "Correlation Matrix",

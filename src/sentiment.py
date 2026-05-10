@@ -5,9 +5,12 @@ tweets, etc.) and return tidy DataFrames with standardised columns.
 """
 
 import nltk
+import numpy as np
 import pandas as pd
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
+
+from typing import List, Optional
 
 from src.utils import setup_logger
 
@@ -70,4 +73,35 @@ def score_headlines(
     result = df.copy()
     result["sentiment_vader"] = result[text_column].apply(vader_score)
     result["sentiment_textblob"] = result[text_column].apply(textblob_score)
+    return result
+
+
+def categorize_sentiment(
+    df: pd.DataFrame,
+    score_col: str = "sentiment_vader",
+    pos_thresh: float = 0.05,
+    neg_thresh: float = -0.05,
+) -> pd.DataFrame:
+    """Add a ``sentiment_category`` column based on score thresholds.
+
+    Categories: ``"positive"``, ``"neutral"``, ``"negative"``.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Must contain *score_col*.
+    score_col : str
+        Column with numeric sentiment scores.
+    pos_thresh : float
+        Scores >= this value are positive.
+    neg_thresh : float
+        Scores <= this value are negative.
+    """
+    result = df.copy()
+    conditions = [
+        result[score_col] >= pos_thresh,
+        result[score_col] <= neg_thresh,
+    ]
+    choices = ["positive", "negative"]
+    result["sentiment_category"] = np.select(conditions, choices, default="neutral")
     return result
