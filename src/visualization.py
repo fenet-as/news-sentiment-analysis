@@ -130,6 +130,42 @@ def histogram(
     return fig
 
 
+def price_volume(
+    df: pd.DataFrame,
+    price_col: str = "Close",
+    volume_col: str = "Volume",
+    title: str = "Price and Volume",
+    figsize: tuple = (14, 7),
+) -> plt.Figure:
+    """Dual-axis chart: price (line) on left, volume (bars) on right.
+
+    Requires *df* to have a ``DatetimeIndex``.
+    """
+    fig, ax1 = plt.subplots(figsize=figsize)
+
+    color_price = "black"
+    color_vol = sns.color_palette("Blues", 3)[1]
+
+    ax1.plot(df.index, df[price_col], color=color_price, linewidth=1.5)
+    ax1.set(ylabel="Price (USD)", title=title)
+
+    ax2 = ax1.twinx()
+    ax2.bar(df.index, df[volume_col], width=1.5, color=color_vol, alpha=0.4, label="Volume")
+    ax2.set(ylabel="Volume")
+
+    ax1.xaxis.set_major_locator(mdates.MonthLocator())
+    ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+    fig.autofmt_xdate()
+
+    lines1, labels1 = ax1.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    if lines2:
+        ax1.legend(lines1 + lines2, labels1 + labels2, loc="upper left")
+
+    sns.despine()
+    return fig
+
+
 def correlation_heatmap(
     df: pd.DataFrame,
     title: str = "Correlation Matrix",
