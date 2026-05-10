@@ -23,3 +23,7 @@ def test_import_visualization():
 
 def test_import_utils():
     import src.utils  # noqa: F401
+
+
+def test_import_eda():
+    import src.eda  # noqa: F401
